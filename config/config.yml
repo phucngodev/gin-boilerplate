@@ -1,0 +1,28 @@
+mode: debug
+port: :8080
+appName: apiserver
+url: http://localhost
+maxPingCount: 10
+
+database:
+  dbname: apiserver
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: dev12345
+  maximumPool-size: 50
+  maximumIdleSize: 10
+redis:
+  address: localhost:6379
+  password:
+  db: 0
+  poolSize: 100
+  minIdleConns: 10
+  idleTimeout: 3000
+log:
+  filename: /tmp/apiserver.log
+  maxSize: 500
+  maxBackups: 3
+  maxAge: 3
+  level: "debug"
+  stdout: true

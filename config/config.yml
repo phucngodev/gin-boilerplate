@@ -5,7 +5,7 @@ url: http://localhost
 maxPingCount: 10
 
 database:
-  dbname: apiserver
+  dbname: drupal
   host: 127.0.0.1
   port: 3306
   username: root

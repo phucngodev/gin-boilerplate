@@ -98,9 +98,9 @@ func (s *HttpServer) Run(routers ...Router) {
 
 	go func() {
 		if err := Ping(s.config.Port, s.config.MaxPingCount); err != nil {
-			log.Fatal("server no response")
+			s.logger.Fatal("server no response")
 		}
-		log.Printf("server started success! port: %s", s.config.Port)
+		s.logger.Info("server started on port: ", zap.String("port", s.config.Port))
 	}()
 
 	srv := http.Server{
@@ -121,17 +121,17 @@ func (s *HttpServer) Run(routers ...Router) {
 		defer cancel()
 
 		if err := srv.Shutdown(ctx); err != nil {
-			log.Printf("server shutdown err %v \n", err)
+			s.logger.Error("server shutdown error", zap.Error(err))
 		}
 	}()
 
 	if err := srv.ListenAndServe(); err != nil {
 		if err != http.ErrServerClosed {
-			log.Printf("server started failed on port: %s", s.config.Port)
+			s.logger.Error("server started failed on port: ", zap.String("port", s.config.Port))
 			return
 		}
 	}
 
 	wg.Wait()
-	log.Printf("server stop on port: %s", s.config.Port)
+	s.logger.Info("server started failed on port: ", zap.String("port", s.config.Port))
 }

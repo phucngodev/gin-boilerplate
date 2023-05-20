@@ -6,26 +6,29 @@ import (
 	"apiserver/pkg/server"
 
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type Application struct {
-	config *config.Config
-	logger *zap.Logger
-	server *server.HttpServer
-	router server.Router
+	Config *config.Config
+	Logger *zap.Logger
+	Server *server.HttpServer
+	Router server.Router
+	DB     *gorm.DB
 }
 
-func NewApplication(config *config.Config, logger *zap.Logger, server *server.HttpServer, router server.Router) *Application {
+func NewApplication(config *config.Config, db *gorm.DB, logger *zap.Logger, server *server.HttpServer, router server.Router) *Application {
 	return &Application{
-		config: config,
-		logger: logger,
-		server: server,
-		router: router,
+		Config: config,
+		Logger: logger,
+		Server: server,
+		Router: router,
+		DB:     db,
 	}
 }
 
 func (a *Application) Run() error {
-	a.server.Run(a.router, middleware.NewMidddleware())
+	a.Server.Run(a.Router, middleware.NewMidddleware())
 
 	return nil
 }

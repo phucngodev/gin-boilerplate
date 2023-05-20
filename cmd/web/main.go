@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"log"
+
+	"go.uber.org/zap"
 )
 
 var configFile = flag.String("f", "config.yml", "set config file which viper will load")
@@ -10,10 +12,13 @@ var configFile = flag.String("f", "config.yml", "set config file which viper wil
 func main() {
 	flag.Parse()
 
-	app, err := createApp(*configFile)
+	app, closeFn, err := createApp(*configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	app.Run()
+	app.Server.RegisterOnShutdown(closeFn)
+	if err := app.Run(); err != nil {
+		app.Logger.Error("app.Run() errro: ", zap.Error(err))
+	}
 }

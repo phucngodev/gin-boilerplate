@@ -9,8 +9,11 @@ package main
 import (
 	"apiserver/internal/app"
 	"apiserver/internal/handler"
+	"apiserver/internal/repo/mysql"
 	"apiserver/internal/router"
+	"apiserver/internal/service"
 	"apiserver/pkg/config"
+	"apiserver/pkg/db"
 	"apiserver/pkg/logger"
 	"apiserver/pkg/server"
 	"github.com/google/wire"
@@ -18,22 +21,31 @@ import (
 
 // Injectors from wire.go:
 
-func createApp(configFile2 string) (*app.Application, error) {
+func createApp(configFile2 string) (*app.Application, func(), error) {
 	configConfig, err := config.New(configFile2)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	zapLogger, err := logger.New(configConfig)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	gormDB, cleanup, err := db.New(configConfig, zapLogger)
+	if err != nil {
+		return nil, nil, err
 	}
 	httpServer := server.NewHttpServer(configConfig, zapLogger)
 	homeHandler := handler.NewHomeHandler(zapLogger)
-	apiRouter := router.NewApiRouter(homeHandler)
-	application := app.NewApplication(configConfig, zapLogger, httpServer, apiRouter)
-	return application, nil
+	userRepo := mysql.NewUserRepo(gormDB)
+	userService := service.NewUserService(userRepo)
+	userHandler := handler.NewUserHandler(userService)
+	apiRouter := router.NewApiRouter(homeHandler, userHandler)
+	application := app.NewApplication(configConfig, gormDB, zapLogger, httpServer, apiRouter)
+	return application, func() {
+		cleanup()
+	}, nil
 }
 
 // wire.go:
 
-var providerSet = wire.NewSet(config.New, logger.New, server.NewHttpServer, app.NewApplication, router.ProviderSet)
+var providerSet = wire.NewSet(config.New, logger.New, db.New, server.NewHttpServer, app.NewApplication, router.ProviderSet)

@@ -16,11 +16,8 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"go.uber.org/zap"
 )
-
-var ProviderSet = wire.NewSet(NewHttpServer)
 
 type HttpServer struct {
 	config     *config.Config

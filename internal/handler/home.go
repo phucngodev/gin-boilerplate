@@ -4,11 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"go.uber.org/zap"
 )
-
-var ProviderSet = wire.NewSet(NewHomeHandler)
 
 type HomeHandler struct {
 	logger *zap.Logger

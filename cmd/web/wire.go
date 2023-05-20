@@ -13,11 +13,11 @@ import (
 )
 
 var providerSet = wire.NewSet(
-	config.ProviderSet,
-	logger.ProviderSet,
-	server.ProviderSet,
+	config.New,
+	logger.New,
+	server.NewHttpServer,
+	app.NewApplication,
 	router.ProviderSet,
-	app.ProviderSet,
 )
 
 func createApp(configFile string) (*app.Application, error) {

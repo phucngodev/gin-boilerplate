@@ -5,11 +5,8 @@ import (
 	"apiserver/pkg/config"
 	"apiserver/pkg/server"
 
-	"github.com/google/wire"
 	"go.uber.org/zap"
 )
-
-var ProviderSet = wire.NewSet(NewApplication)
 
 type Application struct {
 	config *config.Config

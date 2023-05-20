@@ -4,13 +4,10 @@ import (
 	"apiserver/pkg/config"
 	"os"
 
-	"github.com/google/wire"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
-
-var ProviderSet = wire.NewSet(New)
 
 func New(config *config.Config) (*zap.Logger, error) {
 	var level = zap.NewAtomicLevel()

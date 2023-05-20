@@ -3,11 +3,8 @@ package config
 import (
 	"fmt"
 
-	"github.com/google/wire"
 	"github.com/spf13/viper"
 )
-
-var ProviderSet = wire.NewSet(New)
 
 type Config struct {
 	Mode         string      `mapstructure:"mode"`

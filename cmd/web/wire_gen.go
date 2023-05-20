@@ -36,4 +36,4 @@ func createApp(configFile2 string) (*app.Application, error) {
 
 // wire.go:
 
-var providerSet = wire.NewSet(config.ProviderSet, logger.ProviderSet, server.ProviderSet, router.ProviderSet, app.ProviderSet)
+var providerSet = wire.NewSet(config.New, logger.New, server.NewHttpServer, app.NewApplication, router.ProviderSet)

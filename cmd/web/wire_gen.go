@@ -21,18 +21,18 @@ import (
 
 // Injectors from wire.go:
 
-func createApp(configFile2 string) (*app.Application, func(), error) {
+func createApp(configFile2 string) (*app.Application, error) {
 	configConfig, err := config.New(configFile2)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	zapLogger, err := logger.New(configConfig)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	gormDB, cleanup, err := db.New(configConfig, zapLogger)
+	gormDB, err := db.New(configConfig, zapLogger)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	httpServer := server.NewHttpServer(configConfig, zapLogger)
 	homeHandler := handler.NewHomeHandler(zapLogger)
@@ -41,9 +41,7 @@ func createApp(configFile2 string) (*app.Application, func(), error) {
 	userHandler := handler.NewUserHandler(userService)
 	apiRouter := router.NewApiRouter(homeHandler, userHandler)
 	application := app.NewApplication(configConfig, gormDB, zapLogger, httpServer, apiRouter)
-	return application, func() {
-		cleanup()
-	}, nil
+	return application, nil
 }
 
 // wire.go:

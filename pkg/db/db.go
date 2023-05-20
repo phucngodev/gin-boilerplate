@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func New(config *config.Config, logger *zap.Logger) (*gorm.DB, func(), error) {
+func New(config *config.Config, logger *zap.Logger) (*gorm.DB, error) {
 	dbConfig := config.DBConfig
 
 	dsn := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
@@ -24,21 +24,16 @@ func New(config *config.Config, logger *zap.Logger) (*gorm.DB, func(), error) {
 	})
 	if err != nil {
 		logger.Error("connect to database error", zap.Error(err))
-		return nil, nil, err
+		return nil, err
 	}
 	sqlDb, err := db.DB()
 
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	sqlDb.SetConnMaxLifetime(time.Hour)
 	sqlDb.SetMaxOpenConns(dbConfig.MaximumIdleSize)
 	sqlDb.SetMaxIdleConns(dbConfig.MaximumIdleSize)
 
-	closeFn := func() {
-		logger.Info("close database called")
-		sqlDb.Close()
-	}
-
-	return db, closeFn, nil
+	return db, nil
 }

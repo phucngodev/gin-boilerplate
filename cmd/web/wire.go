@@ -22,6 +22,6 @@ var providerSet = wire.NewSet(
 	router.ProviderSet,
 )
 
-func createApp(configFile string) (*app.Application, func(), error) {
+func createApp(configFile string) (*app.Application, error) {
 	panic(wire.Build(providerSet))
 }

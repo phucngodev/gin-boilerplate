@@ -32,3 +32,15 @@ func (a *Application) Run() error {
 
 	return nil
 }
+
+func (a *Application) Close() {
+	a.Logger.Info("perform application cleanup")
+	sqlDB, err := a.DB.DB()
+	if err != nil {
+		a.Logger.Error("get sqlDB failed: %w", zap.Error(err))
+	}
+	err = sqlDB.Close()
+	if err != nil {
+		a.Logger.Error("get sqlDB failed: %w", zap.Error(err))
+	}
+}

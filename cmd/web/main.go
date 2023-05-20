@@ -12,12 +12,12 @@ var configFile = flag.String("f", "config.yml", "set config file which viper wil
 func main() {
 	flag.Parse()
 
-	app, closeFn, err := createApp(*configFile)
+	app, err := createApp(*configFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	app.Server.RegisterOnShutdown(closeFn)
+	app.Server.RegisterOnShutdown(app.Close)
 	if err := app.Run(); err != nil {
 		app.Logger.Error("app.Run() errro: ", zap.Error(err))
 	}

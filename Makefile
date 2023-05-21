@@ -7,3 +7,7 @@ build: wire
 .PHONY: wire
 wire:
 	wire ./...
+
+.PHONY: test
+test:
+	go test -race -v ./...

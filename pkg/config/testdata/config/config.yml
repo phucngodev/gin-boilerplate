@@ -10,7 +10,7 @@ database:
   port: 3306
   username: root
   password: dev12345
-  maximumPool-size: 50
+  maximumPoolSize: 50
   maximumIdleSize: 10
 redis:
   address: localhost:6379

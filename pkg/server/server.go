@@ -94,8 +94,6 @@ func (s *HttpServer) Run(routers ...Router) {
 	g := gin.New()
 	s.registerRouter(g, routers...)
 
-	// TODO: register validator
-
 	go func() {
 		if err := Ping(s.config.Port, s.config.MaxPingCount); err != nil {
 			s.logger.Fatal("server no response")
